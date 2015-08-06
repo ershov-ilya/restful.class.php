@@ -103,6 +103,7 @@ class RESTful {
     function sanitize($arr, $filter=array()){
         $out=array();
         foreach($arr as $key => $val) {
+            $val=urldecode($val);
             if(isset($filter[$key])){
                 $out[$key] = filter_var($val, $filter[$key]);
                 continue;
