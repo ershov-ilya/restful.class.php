@@ -19,7 +19,7 @@ class RESTful {
         $this->private_scope = array();
 
         defined('ACTION') or define('ACTION', $ACTION);
-        $scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city');
+        $scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'referer');
         RESTful::$filter = $filter;
 
         // Define method type
@@ -31,13 +31,13 @@ class RESTful {
         {
             $this->private_scope['agent'] = $_SERVER['HTTP_USER_AGENT'];
             $this->private_scope['ip'] = $ip = $_SERVER['REMOTE_ADDR'];
+            if(isset($_SERVER['HTTP_REFERER'])){$this->private_scope['referer']=$_SERVER['HTTP_REFERER'];}
 
             $link='http://api.sypexgeo.net/json/';
             $curl=curl_init();
             curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl,CURLOPT_URL,$link.$ip);
             curl_setopt($curl,CURLOPT_HEADER,false);
-
             $out=curl_exec($curl); #Инициируем запрос к API и сохраняем ответ в переменную
             $code=curl_getinfo($curl,CURLINFO_HTTP_CODE);
             curl_close($curl); #Завершаем сеанс cURL
