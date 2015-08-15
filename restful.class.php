@@ -33,20 +33,6 @@ class RESTful {
             $this->private_scope['ip'] = $ip = $_SERVER['REMOTE_ADDR'];
             if(isset($_SERVER['HTTP_REFERER'])){$this->private_scope['referer']=$_SERVER['HTTP_REFERER'];}
 
-            /*
-            $link='http://api.sypexgeo.net/json/';
-            $curl=curl_init();
-            curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
-            curl_setopt($curl,CURLOPT_URL,$link.$ip);
-            curl_setopt($curl,CURLOPT_HEADER,false);
-            $out=curl_exec($curl); #Инициируем запрос к API и сохраняем ответ в переменную
-            $code=curl_getinfo($curl,CURLINFO_HTTP_CODE);
-            curl_close($curl); #Завершаем сеанс cURL
-            $res_arr=json_decode($out);
-            $city=$res_arr->city->name_ru.', '.$res_arr->country->name_ru;
-            $this->private_scope['city']=$city;
-            */
-
             if(isset($_SERVER['REQUEST_METHOD']))
             {
                 define('METHOD', $_SERVER['REQUEST_METHOD']);
