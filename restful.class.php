@@ -98,6 +98,7 @@ class RESTful {
             }
             switch ($key) {
                 case 'sc':
+                case 'scope':
                 case 'user':
                 case 'login':
                     // Only ALLOWED SYMBOLS
