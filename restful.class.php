@@ -19,7 +19,7 @@ class RESTful {
         $this->private_scope = array();
 
         defined('ACTION') or define('ACTION', $ACTION);
-        $scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'referer');
+        $scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'http_referer');
         RESTful::$filter = $filter;
 
         // Define method type
@@ -31,7 +31,7 @@ class RESTful {
         {
             $this->private_scope['agent'] = $_SERVER['HTTP_USER_AGENT'];
             $this->private_scope['ip'] = $ip = $_SERVER['REMOTE_ADDR'];
-            if(isset($_SERVER['HTTP_REFERER'])){$this->private_scope['referer']=$_SERVER['HTTP_REFERER'];}
+            if(isset($_SERVER['HTTP_REFERER'])){$this->private_scope['http_referer']=$_SERVER['HTTP_REFERER'];}
 
             if(isset($_SERVER['REQUEST_METHOD']))
             {
