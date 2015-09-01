@@ -16,14 +16,14 @@ class RESTful {
     static $filter;
 
     function __construct($ACTION='',
-                         $filter=array(),
-                         $arrSanitize=array(),
+                         $data_filter=array(),
+                         $scopeSanitize=array(),
                          $raw_scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'Referer', 'http_referer')
     ){
         $this->raw_scope = array();
 
         defined('ACTION') or define('ACTION', $ACTION);
-        RESTful::$filter = $filter;
+        RESTful::$filter = $data_filter;
 
         // Define method type
         if(empty($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['SHELL'])) {
@@ -70,8 +70,8 @@ class RESTful {
         // Для дебага, возможность переопределять метод
         if(DEBUG && isset($_GET['METHOD'])) $this->raw_scope['METHOD']=$_GET['METHOD'];
 
-        $this->scope = $this->sanitize($this->filtrateScope($raw_scope_filter), $arrSanitize);
-        $this->data = $this->sanitize($this->filtrateScope(), $arrSanitize);
+        $this->scope = $this->sanitize($this->filtrateScope($raw_scope_filter), $scopeSanitize);
+        $this->data = $this->sanitize($this->filtrateScope(), $scopeSanitize);
         return $this->raw_scope;
     }
 
