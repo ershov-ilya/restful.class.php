@@ -10,28 +10,31 @@
 header('Content-Type: text/plain; charset=utf-8');
 
 class RESTful {
-    private $private_scope;
+    private $raw_scope;
     public $scope;
     public $data;
     static $filter;
 
-    function __construct($ACTION='', $filter=array(), $arrSanitize=array()){
-        $this->private_scope = array();
+    function __construct($ACTION='',
+                         $filter=array(),
+                         $arrSanitize=array(),
+                         $raw_scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'Referer', 'http_referer')
+    ){
+        $this->raw_scope = array();
 
         defined('ACTION') or define('ACTION', $ACTION);
-        $scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'http_referer');
         RESTful::$filter = $filter;
 
         // Define method type
-        if(isset($_SERVER['argc'])) {
+        if(empty($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['SHELL'])) {
             define('METHOD', 'CONSOLE');
             //$this->private_name='CONSOLE';
         }
         else
         {
-            $this->private_scope['agent'] = $_SERVER['HTTP_USER_AGENT'];
-            $this->private_scope['ip'] = $ip = $_SERVER['REMOTE_ADDR'];
-            if(isset($_SERVER['HTTP_REFERER'])){$this->private_scope['http_referer']=$_SERVER['HTTP_REFERER'];}
+            $this->raw_scope['agent'] = $_SERVER['HTTP_USER_AGENT'];
+            $this->raw_scope['ip'] = $ip = $_SERVER['REMOTE_ADDR'];
+            if(isset($_SERVER['HTTP_REFERER'])){$this->raw_scope['http_referer']=$_SERVER['HTTP_REFERER'];}
 
             if(isset($_SERVER['REQUEST_METHOD']))
             {
@@ -46,34 +49,34 @@ class RESTful {
 
         // Combine parameters
         if(METHOD=='CONSOLE') {
-            //$this->private_scope = array_merge($this->private_scope, $_SERVER['argv']);
+            //$this->raw_scope = array_merge($this->raw_scope, $_SERVER['argv']);
             require(API_CORE_PATH.'/class/rest/getoptions.php');
-            $this->private_scope = array_merge($this->private_scope, getOptions());
+            $this->raw_scope = array_merge($this->raw_scope, getOptions());
         }
         else{
-            $this->private_scope = array_merge($this->private_scope, $_REQUEST);
-            $this->private_scope = array_merge($this->private_scope, $this->parseRequestHeaders());
+            $this->raw_scope = array_merge($this->raw_scope, $_REQUEST);
+            $this->raw_scope = array_merge($this->raw_scope, $this->parseRequestHeaders());
         }
 
         // Расстановка значений
-        $this->private_scope['ACTION']=$ACTION;
-        $this->private_scope['METHOD']=METHOD;
-        if(empty($this->private_scope['scope']) && !empty($this->private_scope['sc'])){
+        $this->raw_scope['ACTION']=$ACTION;
+        $this->raw_scope['METHOD']=METHOD;
+        if(empty($this->raw_scope['scope']) && !empty($this->raw_scope['sc'])){
             // sc - синоним scope
-            $this->private_scope['scope']=$this->private_scope['sc'];
-            unset($this->private_scope['sc']);
+            $this->raw_scope['scope']=$this->raw_scope['sc'];
+            unset($this->raw_scope['sc']);
         }
 
         // Для дебага, возможность переопределять метод
-        if(DEBUG && isset($_GET['METHOD'])) $this->private_scope['METHOD']=$_GET['METHOD'];
+        if(DEBUG && isset($_GET['METHOD'])) $this->raw_scope['METHOD']=$_GET['METHOD'];
 
-        $this->scope = $this->sanitize($this->filtrateScope($scope_filter), $arrSanitize);
+        $this->scope = $this->sanitize($this->filtrateScope($raw_scope_filter), $arrSanitize);
         $this->data = $this->sanitize($this->filtrateScope(), $arrSanitize);
-        return $this->private_scope;
+        return $this->raw_scope;
     }
 
     function getRaw(){
-        return $this->private_scope;
+        return $this->raw_scope;
     }
 
     function parseRequestHeaders() {
@@ -146,7 +149,7 @@ class RESTful {
     }
 
     function filtrateScope($filter=NULL){
-        return $this->filtrate($this->private_scope,$filter);
+        return $this->filtrate($this->raw_scope,$filter);
     }
 
     function randomString($length = 12, $charSet='') {
