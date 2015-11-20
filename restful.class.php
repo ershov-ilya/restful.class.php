@@ -7,7 +7,7 @@
  * Date: 25.01.2015
  * Time: 12:52
  */
-header('Content-Type: text/plain; charset=utf-8');
+//header('Content-Type: text/plain; charset=utf-8');
 
 class RESTful {
     private $raw_scope;
@@ -163,4 +163,4 @@ class RESTful {
         return $randomString;
     }
 
-} // class restful
+} // class RESTful
