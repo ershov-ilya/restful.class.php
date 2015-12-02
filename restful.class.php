@@ -98,7 +98,7 @@ class RESTful {
             if(isset($filter[$key])){
                 $type=gettype($filter[$key]);
                 switch($type){
-                    case 'int':
+                    case 'integer':
                         $out[$key] = filter_var($val, $filter[$key]);
                         break;
                     case 'string': // регулярка типа '/[^0-9a-zA-Z]/'
@@ -172,6 +172,15 @@ class RESTful {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    function __invoke($key=null){
+        if(empty($key)) return null;
+        $type=gettype($key);
+        if(!($type=='int'||$type=='string')) return null;
+        if(isset($this->data[$key])) return $this->data[$key];
+        if(isset($this->scope[$key])) return $this->scope[$key];
+        return null;
     }
 
 } // class RESTful
