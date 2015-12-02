@@ -16,7 +16,9 @@ print_r($rest->data);
 print $rest('code');
 ```
 
-Separates GET/POST data into two arrays:
+Separates GET/POST data into two arrays: `$rest->data` and `$rest->scope`
+
+#### Parameters
 
 **1st optional parameter** defines this request name. May be helpful for permissions definition
 
