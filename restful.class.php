@@ -96,10 +96,18 @@ class RESTful {
         foreach($arr as $key => $val) {
             $val=urldecode($val);
             if(isset($filter[$key])){
-                // $filter[$key] - int число, набор флагов
-                // TODO: добавить проверку на string - регулярка по разрешённым символам
-                // TODO: добавить проверку на function - callback функция-обработчик
-                $out[$key] = filter_var($val, $filter[$key]);
+                $type=gettype($filter[$key]);
+                switch($type){
+                    case 'int':
+                        $out[$key] = filter_var($val, $filter[$key]);
+                        break;
+                    case 'string': // регулярка типа '/[^0-9a-zA-Z]/'
+                        $out[$key]=preg_replace($filter[$key],'',$val);
+                        break;
+                    case 'object': // Closure объект, либо объект с методом __invoke
+                        $out[$key]=$filter[$key]($val);
+                        break;
+                }
                 continue;
             }
             switch ($key) {
