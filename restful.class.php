@@ -19,7 +19,10 @@ class RESTful {
                          $data_filter=array(),
                          $scopeSanitize=array(),
                          $raw_scope_filter=array('ACTION','METHOD','id','scope','sc','hash', 'sessid', 'crm', 'agent', 'ip', 'city', 'Referer', 'http_referer')
-    ){
+    )
+    {
+        if(is_string($data_filter)) $data_filter=explode(',',$data_filter);
+        if(is_string($raw_scope_filter)) $raw_scope_filter=explode(',',$raw_scope_filter);
         $this->raw_scope = array();
 
         defined('ACTION') or define('ACTION', $ACTION);
@@ -147,9 +150,7 @@ class RESTful {
 
     function filtrate($arr, $filter=NULL){
         if($filter==NULL) $filter=RESTful::$filter;
-        if (is_string($filter)){
-            $filter=explode(',',$filter);
-        }
+        if (is_string($filter)) $filter=explode(',',$filter);
         $res=array();
         foreach($filter as $el){
             $el_cropspace=preg_replace('/ /','',$el);
