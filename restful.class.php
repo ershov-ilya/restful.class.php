@@ -96,6 +96,9 @@ class RESTful {
         foreach($arr as $key => $val) {
             $val=urldecode($val);
             if(isset($filter[$key])){
+                // $filter[$key] - int число, набор флагов
+                // TODO: добавить проверку на string - регулярка по разрешённым символам
+                // TODO: добавить проверку на function - callback функция-обработчик
                 $out[$key] = filter_var($val, $filter[$key]);
                 continue;
             }
