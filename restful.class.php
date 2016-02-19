@@ -78,6 +78,23 @@ class RESTful {
         return $this->raw_scope;
     }
 
+    public static function map($data, $map=array(), $strict=false){
+        $result=array();
+        print_r($data);
+        print_r($map);
+        if($strict) {
+            foreach ($data as $k => $v) {
+                if (isset($map[$k])) $result[$map[$k]] = $v;
+            }
+        }else{
+            foreach ($data as $k => $v) {
+                if (isset($map[$k])) $result[$map[$k]] = $v;
+                else $result[$k] = $v;
+            }
+        }
+        return $result;
+    }
+
     function getRaw(){
         return $this->raw_scope;
     }
