@@ -80,8 +80,6 @@ class RESTful {
 
     public static function map($data, $map=array(), $strict=false){
         $result=array();
-        print_r($data);
-        print_r($map);
         if($strict) {
             foreach ($data as $k => $v) {
                 if (isset($map[$k])) $result[$map[$k]] = $v;
